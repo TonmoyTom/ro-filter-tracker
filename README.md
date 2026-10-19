@@ -1,56 +1,61 @@
-# Welcome to your Expo app 👋
+# RO Filter Tracker · ফিল্টার ট্র্যাকার
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A Bangla/English mobile app that reminds you when to replace the cartridges in your home RO water purifier.
 
-## Get started
+আপনার পানির পিউরিফায়ারের কোন ফিল্টার কবে বদলাতে হবে, তা মনে রাখে আর সময়মতো জানিয়ে দেয়।
 
-1. Install dependencies
+Built with [Expo](https://expo.dev) and React Native.
 
-   ```bash
-   npm install
-   ```
+## Features
 
-2. Start the app
+- **Two-step setup.** Type your purifier's brand and a name, then add 2–7 cartridges.
+- **Cartridge picker.** Choose from common types (PP, UDF, CTO, RO, T33, UF, UV, Mineral, Alkaline) or name your own, then set how many months it lasts and when you bought it.
+- **Countdown for every cartridge.** A purifier-style display, days left, percent used, and a history of past replacements.
+- **Reminders.** A local notification a few days before a cartridge is due, on the due date, and daily after it expires. A test button checks that notifications work.
+- **Bangla and English**, switchable at any time, including the notification text.
+- **Dark and light themes.**
+- **Private by design.** Everything is stored on the device; there is no account or server.
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Run it
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+Scan the QR code with Expo Go, or press `a` / `i` to open an emulator.
 
-### Other setup steps
+> **Notifications on Android:** Expo Go for Android doesn't include the notifications module. Everything else works there; to test reminders on Android, make a development build:
+>
+> ```bash
+> npx expo run:android
+> ```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Checks
 
-## Learn more
+```bash
+npx tsc --noEmit   # typecheck
+npx expo lint      # lint
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Project layout
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+src/
+  app/          screens (Expo Router)
+    setup/      two-step setup: purifier, then cartridges
+    filter/     cartridge detail
+  components/   UI: machine display, cartridge drawings, sheets
+  constants/    cartridge presets, strings (bn/en), theme
+  lib/          storage, reminders, i18n, date maths
+```
 
-## Join the community
+## Disclaimer
 
-Join our community of developers creating universal apps.
+This is an independent project. It is not affiliated with or endorsed by any purifier manufacturer; brand names are used only to describe compatible cartridges.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## License
+
+[MIT](LICENSE) © Kamrul Zaman
+
+The 7-segment display font is [DSEG](https://github.com/keshikan/DSEG) by keshikan, used under the [SIL Open Font License 1.1](assets/fonts/DSEG-LICENSE.txt).

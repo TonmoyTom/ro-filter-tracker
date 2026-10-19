@@ -1,65 +1,68 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://unistyl.es/), etc.
- */
+export const dark = {
+  bg: '#110A0D',
+  bgGlow: '#2A1218',
+  card: '#1F1317',
+  cardHi: '#2A1A1F',
+  border: '#36242A',
+  hex: '#FFFFFF0A',
+  text: '#FFFFFF',
+  textDim: '#A8979E',
+  blue: '#8FD3FF',
+  amber: '#FFB547',
+  red: '#FF5468',
+  blueTint: '#8FD3FF1F',
+  amberTint: '#FFB5471F',
+  redTint: '#FF546824',
+  onBlue: '#04131F',
+  tile: '#0E070A',
+  segOff: '#FFFFFF14',
+};
 
-import '@/global.css';
+export const light: Theme = {
+  bg: '#F6F1F2',
+  bgGlow: '#FBE9EC',
+  card: '#FFFFFF',
+  cardHi: '#FBF8F9',
+  border: '#EADDE1',
+  hex: '#5A1A2610',
+  text: '#1C1216',
+  textDim: '#6E6166',
+  blue: '#1F7BC4',
+  amber: '#C27A00',
+  red: '#D92D44',
+  blueTint: '#1F7BC41A',
+  amberTint: '#C27A001F',
+  redTint: '#D92D441A',
+  onBlue: '#FFFFFF',
+  tile: '#F3EDEF',
+  segOff: '#1C121614',
+};
 
-import { Platform } from 'react-native';
+export type Theme = typeof dark;
 
-export const Colors = {
-  light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-  },
+// মেশিনের ডিসপ্লে সবসময় কালো, তাই রং থিম থেকে আলাদা
+export const lcd = {
+  bg: '#030405',
+  label: '#8FB4CF',
+  blue: dark.blue,
+  amber: dark.amber,
+  red: dark.red,
+  off: '#FFFFFF12',
+  body: ['#6B1F2D', '#3A0F18', '#250A10'] as const,
+};
+
+export type Status = 'ok' | 'soon' | 'expired';
+
+export const statusColor = (t: { blue: string; amber: string; red: string }, s: Status) =>
+  s === 'expired' ? t.red : s === 'soon' ? t.amber : t.blue;
+
+export const statusTint = (t: Theme, s: Status) =>
+  s === 'expired' ? t.redTint : s === 'soon' ? t.amberTint : t.blueTint;
+
+export const font = {
+  regular: 'HindSiliguri_400Regular',
+  medium: 'HindSiliguri_500Medium',
+  semibold: 'HindSiliguri_600SemiBold',
+  bold: 'HindSiliguri_700Bold',
+  seg: 'DSEG7',
 } as const;
-
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
-
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
-  },
-});
-
-export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
-} as const;
-
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 800;

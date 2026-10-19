@@ -41,3 +41,6 @@ example
 # generated native folders
 /ios
 /android
+
+# local editor / agent settings
+.claude/settings.local.json

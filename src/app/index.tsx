@@ -1,98 +1,73 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { useEffect } from 'react';
+import { Text, View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { IconButton } from '../components/Button';
+import { FilterCard } from '../components/FilterCard';
+import { MachineDisplay } from '../components/MachineDisplay';
+import { PressableScale } from '../components/PressableScale';
+import { Screen } from '../components/Screen';
+import { font } from '../constants/theme';
+import { useI18n } from '../lib/i18n';
+import { useTheme } from '../lib/ThemeContext';
+import { useAppState } from '../lib/useAppState';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+// "পরে করব" চাপলে এই সেশনে আর সেটআপ খুলবে না
+let setupPrompted = false;
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+export default function Home() {
+  const { theme } = useTheme();
+  const { t } = useI18n();
+  const { state, isDemo } = useAppState();
+
+  useEffect(() => {
+    if (isDemo && state && !setupPrompted) {
+      setupPrompted = true;
+      router.push('/setup');
+    }
+  }, [isDemo, state]);
+
+  if (!state) return null;
+
+  const p = state.purifier;
+  const subtitle = isDemo || !p ? t('tagline') : [...new Set([p.name, p.brand].filter(Boolean))].join(' · ');
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
+    <Screen>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <View style={{ flex: 1 }}>
+          <Text numberOfLines={1} style={{ color: theme.textDim, fontFamily: font.regular, fontSize: 13 }}>{subtitle}</Text>
+          <Text style={{ color: theme.text, fontFamily: font.bold, fontSize: 28, lineHeight: 38 }}>{t('title')}</Text>
+        </View>
+        <IconButton icon="options-outline" onPress={() => router.push('/settings')} />
+      </View>
+
+      <MachineDisplay state={state} />
+
+      {isDemo && (
+        <Animated.View entering={FadeIn.delay(300)}>
+          <PressableScale
+            onPress={() => router.push('/setup')}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: theme.blueTint, borderColor: theme.blue + '55', borderWidth: 1, borderRadius: 18, padding: 14, marginTop: 18 }}
+          >
+            <Ionicons name="sparkles-outline" size={22} color={theme.blue} />
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: theme.text, fontFamily: font.semibold, fontSize: 15 }}>{t('demoTitle')}</Text>
+              <Text style={{ color: theme.textDim, fontFamily: font.regular, fontSize: 13 }}>{t('demoBody')}</Text>
+            </View>
+            <View style={{ backgroundColor: theme.blue, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 6 }}>
+              <Text style={{ color: theme.onBlue, fontFamily: font.bold, fontSize: 13 }}>{t('demoCta')}</Text>
+            </View>
+          </PressableScale>
+        </Animated.View>
+      )}
+
+      <View style={{ height: 20 }} />
+
+      {state.cartridges.map((c, i) => (
+        <FilterCard key={c.id} cartridge={c} index={i} />
+      ))}
+    </Screen>
   );
 }
-
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
-});
