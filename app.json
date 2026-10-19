@@ -7,6 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "rofiltertracker",
     "userInterfaceStyle": "automatic",
+    "platforms": ["ios", "android"],
     "ios": {
       "icon": "./assets/expo.icon"
     },
@@ -18,11 +19,11 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
-    },
-    "web": {
-      "output": "server",
-      "favicon": "./assets/images/favicon.png"
+      "predictiveBackGestureEnabled": false,
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -42,6 +43,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "5de17658-1e95-48e5-bb93-3b4d56fc6f0c"
+      }
+    },
+    "owner": "tonmoytom"
   }
 }
